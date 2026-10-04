@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tomodachi Lite</title>
+    <title>Tomodachi Life</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -15,7 +15,7 @@
         </div>
         <div class="topbar-stats">
           <div class="stat-pill"><span>Day</span><strong id="dayCounter">1</strong></div>
-          <div class="stat-pill"><span>Town</span><strong id="townName">Sunset Bay</strong></div>
+          <div class="stat-pill"><span>Town</span><strong>Sunset Bay</strong></div>
           <div class="stat-pill"><span>Money</span><strong id="moneyCounter">$200</strong></div>
         </div>
       </header>
@@ -64,6 +64,7 @@
           <div class="mini-panel">
             <h3>Town controls</h3>
             <button id="nextDayBtn" class="main-btn">Next day</button>
+            <button id="pauseBtn" class="secondary-btn" id="pauseToggle">Pause</button>
             <button id="saveBtn" class="secondary-btn">Save game</button>
             <button id="resetBtn" class="danger-btn">Reset town</button>
           </div>
@@ -78,38 +79,27 @@
           </div>
 
           <div class="map-tabs">
-            <button class="map-tab active" data-zone="home">Home</button>
+            <button class="map-tab active" data-zone="plaza">Plaza</button>
             <button class="map-tab" data-zone="park">Park</button>
-            <button class="map-tab" data-zone="plaza">Plaza</button>
-            <button class="map-tab" data-zone="shop">Shop</button>
-            <button class="map-tab" data-zone="studio">Studio</button>
+            <button class="map-tab" data-zone="cafe">Cafe</button>
+            <button class="map-tab" data-zone="beach">Beach</button>
           </div>
 
-          <div id="townZone" class="town-zone"></div>
-          <div id="characterList" class="character-list"></div>
+          <div id="gameCanvas" class="canvas-container"></div>
         </section>
 
         <aside class="panel detail-panel">
           <div id="selectedCharacterPanel" class="selected-card">
             <p class="eyebrow">Selected resident</p>
-            <h2>Select a friend</h2>
+            <h2>Click on a resident</h2>
           </div>
         </aside>
       </main>
     </div>
 
-    <template id="miniGameTemplate">
-      <div class="mini-game-overlay">
-        <div class="mini-game-box">
-          <h3>Mini game: Feel-good choice</h3>
-          <p>Pick the option that makes your friend happiest.</p>
-          <div class="mini-game-choices">
-            <button data-choice="1">Go to the park</button>
-            <button data-choice="2">Watch a movie</button>
-            <button data-choice="3">Share a snack</button>
-          </div>
-          <button class="close-mini-game">Close</button>
-        </div>
+    <template id="thoughtBubbleTemplate">
+      <div class="thought-bubble">
+        <p id="thoughtText"></p>
       </div>
     </template>
 
