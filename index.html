@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tomodachi Lite</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Life sim</p>
+          <h1>Tomodachi Lite</h1>
+        </div>
+        <div class="topbar-stats">
+          <div class="stat-pill">
+            <span>Day</span>
+            <strong id="dayCounter">1</strong>
+          </div>
+          <div class="stat-pill">
+            <span>Money</span>
+            <strong id="moneyCounter">$200</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <aside class="panel sidebar">
+          <h2>Make a new friend</h2>
+          <form id="characterForm" class="character-form">
+            <label>
+              Name
+              <input id="nameInput" type="text" maxlength="18" value="Milo" required />
+            </label>
+
+            <label>
+              Personality
+              <select id="personalityInput">
+                <option value="Happy">Happy</option>
+                <option value="Shy">Shy</option>
+                <option value="Energetic">Energetic</option>
+                <option value="Creative">Creative</option>
+                <option value="Calm">Calm</option>
+                <option value="Goofy">Goofy</option>
+              </select>
+            </label>
+
+            <label>
+              Favorite activity
+              <select id="hobbyInput">
+                <option value="Drawing">Drawing</option>
+                <option value="Sports">Sports</option>
+                <option value="Music">Music</option>
+                <option value="Reading">Reading</option>
+                <option value="Cooking">Cooking</option>
+                <option value="Games">Games</option>
+              </select>
+            </label>
+
+            <label>
+              Mood color
+              <input id="colorInput" type="color" value="#ff9ecf" />
+            </label>
+
+            <button type="submit">Add resident</button>
+          </form>
+
+          <div class="mini-panel">
+            <h3>Town actions</h3>
+            <button id="nextDayBtn" class="main-btn">Next day</button>
+            <button id="saveBtn" class="secondary-btn">Save game</button>
+            <button id="resetBtn" class="danger-btn">Reset town</button>
+          </div>
+        </aside>
+
+        <section class="panel main-stage">
+          <div class="stage-header">
+            <div>
+              <p class="eyebrow">Town square</p>
+              <h2>Resident home</h2>
+            </div>
+          </div>
+
+          <div id="characterList" class="character-list"></div>
+        </section>
+
+        <aside class="panel detail-panel">
+          <div id="selectedCharacterPanel" class="selected-card">
+            <p class="eyebrow">Selected resident</p>
+            <h2>Select a friend</h2>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <template id="miniGameTemplate">
+      <div class="mini-game-overlay">
+        <div class="mini-game-box">
+          <h3>Quick mood match</h3>
+          <p>Pick the choice that makes your friend happiest.</p>
+          <div class="mini-game-choices">
+            <button data-choice="1">Go to the park</button>
+            <button data-choice="2">Watch a movie</button>
+            <button data-choice="3">Have a snack</button>
+          </div>
+          <button class="close-mini-game">Close</button>
+        </div>
+      </div>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
