@@ -106,7 +106,7 @@ function getSelectedCharacter() {
 }
 
 function getZonePeople(zone) {
-  const chars = state.characters.slice();
+  const chars = [...state.characters];
   if (zone === 'home') return chars.slice(0, 2);
   if (zone === 'park') return chars.slice().reverse();
   if (zone === 'plaza') return chars.slice(1).concat(chars[0]);
