@@ -64,7 +64,7 @@
           <div class="mini-panel">
             <h3>Town controls</h3>
             <button id="nextDayBtn" class="main-btn">Next day</button>
-            <button id="pauseBtn" class="secondary-btn" id="pauseToggle">Pause</button>
+            <button id="pauseBtn" class="secondary-btn">Pause</button>
             <button id="saveBtn" class="secondary-btn">Save game</button>
             <button id="resetBtn" class="danger-btn">Reset town</button>
           </div>
@@ -85,7 +85,7 @@
             <button class="map-tab" data-zone="beach">Beach</button>
           </div>
 
-          <div id="gameCanvas" class="canvas-container"></div>
+          <div id="gameCanvas" class="canvas-container" data-zone="plaza"></div>
         </section>
 
         <aside class="panel detail-panel">
@@ -96,12 +96,6 @@
         </aside>
       </main>
     </div>
-
-    <template id="thoughtBubbleTemplate">
-      <div class="thought-bubble">
-        <p id="thoughtText"></p>
-      </div>
-    </template>
 
     <script src="script.js"></script>
   </body>

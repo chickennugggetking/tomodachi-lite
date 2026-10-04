@@ -5,7 +5,7 @@
 :root {
   --bg-1: #f8d4f5;
   --bg-2: #d8eefb;
-  --panel: rgba(255, 255, 255, 0.8);
+  --panel: rgba(255,255,255,0.8);
   --ink: #2d1f3d;
   --pink: #ff7bb2;
   --purple: #8d7cf6;
@@ -38,13 +38,8 @@ button {
   transition: transform 0.15s ease;
 }
 
-button:hover {
-  transform: translateY(-1px);
-}
-
-button:active {
-  transform: translateY(0);
-}
+button:hover { transform: translateY(-1px); }
+button:active { transform: translateY(0); }
 
 .app-shell {
   max-width: 1480px;
@@ -192,69 +187,163 @@ h1 {
 .canvas-container {
   width: 100%;
   height: 600px;
-  background: linear-gradient(180deg, #d9f8ff 0%, #e8d8ff 100%);
-  border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.35);
   box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
+  background: linear-gradient(180deg, #cfeffc 0%, #d8d4ff 100%);
+}
+
+.canvas-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px),
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.25), transparent 18%),
+    radial-gradient(circle at 70% 38%, rgba(255,255,255,0.25), transparent 18%);
+  background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+  opacity: 0.7;
+}
+
+.canvas-container[data-zone="park"] {
+  background: linear-gradient(180deg, #d0f0c0 0%, #c9edf8 100%);
+}
+
+.canvas-container[data-zone="cafe"] {
+  background: linear-gradient(180deg, #f7d7b5 0%, #f3d4ff 100%);
+}
+
+.canvas-container[data-zone="beach"] {
+  background: linear-gradient(180deg, #9ad7ff 0%, #c6f0ff 40%, #f4d89f 100%);
+}
+
+.canvas-container[data-zone="plaza"] {
+  background: linear-gradient(180deg, #d8f1ff 0%, #dfd5ff 100%);
+}
+
+.ground-objects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.house {
+  position: absolute;
+  width: 110px;
+  height: 90px;
+  background: linear-gradient(180deg, #ffe8b6, #ffd4a7);
+  border: 4px solid rgba(120,85,60,0.5);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 5px rgba(255,255,255,0.2);
+}
+
+.house::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -28px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  border-bottom: 34px solid #e2d0ff;
+}
+
+.house::after {
+  content: "";
+  position: absolute;
+  inset: 20px 18px 12px 18px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.18);
+}
+
+.tree {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #98f29a, #52b950 65%, #2c7d35);
+  box-shadow: 0 15px 20px rgba(47,130,65,0.25);
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -22px;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 30px;
+  background: #7b4d31;
+  border-radius: 7px;
 }
 
 .character-sprite {
   position: absolute;
+  transform: translate3d(0,0,0);
   cursor: pointer;
   user-select: none;
+  z-index: 2;
   transition: filter 0.2s ease;
 }
 
 .character-sprite:hover {
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 5px 16px rgba(0,0,0,0.2));
 }
 
 .character-sprite.active {
-  filter: drop-shadow(0 0 20px rgba(141, 124, 246, 0.6));
+  filter: drop-shadow(0 0 18px rgba(141, 124, 246, 0.8));
 }
 
 .sprite-body {
-  font-size: 3.5rem;
   position: relative;
-  display: inline-block;
-  animation: idle 3s ease-in-out infinite;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 2.8rem;
+  background: rgba(255,255,255,0.18);
+  animation: idle 2.6s ease-in-out infinite;
 }
 
 .sprite-name {
   position: absolute;
-  bottom: -24px;
   left: 50%;
+  bottom: -22px;
   transform: translateX(-50%);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  color: #2a1d3a;
   white-space: nowrap;
-  text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+  text-shadow: 0 2px 5px rgba(255,255,255,0.7);
 }
 
 .thought-bubble {
   position: absolute;
-  background: white;
+  background: rgba(255,255,255,0.94);
   border-radius: 12px;
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  max-width: 120px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  max-width: 130px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   z-index: 10;
-  animation: popIn 0.3s ease;
+  animation: popIn 0.28s ease;
 }
 
-.thought-bubble::after {
+.thought-bubble::before {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: white;
-  border-radius: 50%;
-  bottom: -6px;
   left: 12px;
-  box-shadow: -6px -4px 0 -2px rgba(0,0,0,0.1);
+  bottom: -8px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.94);
+  transform: rotate(45deg);
 }
 
 @keyframes idle {
@@ -263,8 +352,8 @@ h1 {
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 .selected-card {
@@ -368,7 +457,6 @@ h1 {
   .layout {
     grid-template-columns: 1fr;
   }
-
   .canvas-container {
     height: 400px;
   }
