@@ -3,7 +3,9 @@ const STORAGE_KEY = 'tomodachi-lite-save-v1';
 const defaultState = {
   day: 1,
   money: 200,
-  log: ['Welcome to Tomodachi Lite!'],
+  selectedId: 1,
+  zone: 'home',
+  log: ['Welcome to Sunset Bay!'],
   characters: [
     {
       id: 1,
@@ -11,12 +13,12 @@ const defaultState = {
       personality: 'Happy',
       hobby: 'Drawing',
       color: '#ff9ecf',
-      mood: 72,
-      hunger: 74,
-      energy: 68,
-      happiness: 80,
-      social: 74,
-      health: 79,
+      mood: 76,
+      hunger: 72,
+      energy: 70,
+      happiness: 82,
+      social: 68,
+      health: 80,
       age: 18,
       relationship: 0,
       favoriteFood: 'berry parfait',
@@ -28,32 +30,41 @@ const defaultState = {
       personality: 'Shy',
       hobby: 'Reading',
       color: '#91d4ff',
-      mood: 70,
-      hunger: 66,
-      energy: 72,
-      happiness: 76,
-      social: 62,
+      mood: 72,
+      hunger: 68,
+      energy: 74,
+      happiness: 78,
+      social: 63,
       health: 81,
       age: 19,
       relationship: 0,
       favoriteFood: 'tea cake',
       icon: '😊'
     }
-  ],
-  selectedId: 1
+  ]
 };
 
 const state = loadState();
 
 const elements = {
   dayCounter: document.querySelector('#dayCounter'),
+  townName: document.querySelector('#townName'),
   moneyCounter: document.querySelector('#moneyCounter'),
   characterList: document.querySelector('#characterList'),
   selectedCharacterPanel: document.querySelector('#selectedCharacterPanel'),
   characterForm: document.querySelector('#characterForm'),
   nextDayBtn: document.querySelector('#nextDayBtn'),
   saveBtn: document.querySelector('#saveBtn'),
-  resetBtn: document.querySelector('#resetBtn')
+  resetBtn: document.querySelector('#resetBtn'),
+  townZone: document.querySelector('#townZone')
+};
+
+const zoneLabels = {
+  home: 'Home sweet home',
+  park: 'Park outing',
+  plaza: 'Town plaza',
+  shop: 'Town shop',
+  studio: 'Music studio'
 };
 
 function uid() {
@@ -68,17 +79,6 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addLog(message) {
-  state.log.unshift(message);
-  if (state.log.length > 8) {
-    state.log = state.log.slice(0, 8);
-  }
-}
-
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) return structuredClone(defaultState);
@@ -90,32 +90,49 @@ function loadState() {
   }
 }
 
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function addLog(message) {
+  state.log.unshift(message);
+  if (state.log.length > 8) {
+    state.log = state.log.slice(0, 8);
+  }
+}
+
 function getSelectedCharacter() {
   return state.characters.find((char) => char.id === state.selectedId) || state.characters[0];
 }
 
-function createCharacter(name, personality, hobby, color) {
-  const char = {
-    id: Number(uid().replace(/\D/g, '').slice(0, 8)) || Date.now(),
-    name,
-    personality,
-    hobby,
-    color,
-    mood: 75,
-    hunger: 72,
-    energy: 69,
-    happiness: 78,
-    social: 70,
-    health: 80,
-    age: 18,
-    relationship: 0,
-    favoriteFood: ['fruit bowl', 'ramen', 'tea cake', 'cookie stack'][randomInt(0, 3)],
-    icon: ['🙂', '😊', '😄', '😎', '😁'][randomInt(0, 4)]
-  };
-  state.characters.push(char);
-  state.selectedId = char.id;
-  addLog(`${char.name} moved into town.`);
-  saveState();
+function getZonePeople(zone) {
+  const chars = state.characters.slice();
+  if (zone === 'home') return chars.slice(0, 2);
+  if (zone === 'park') return chars.slice().reverse();
+  if (zone === 'plaza') return chars.slice(1).concat(chars[0]);
+  if (zone === 'shop') return chars.slice(0, 1);
+  return chars.slice();
+}
+
+function renderZone() {
+  const zone = state.zone || 'home';
+  const people = getZonePeople(zone);
+
+  elements.townZone.innerHTML = `
+    <div class="zone-card">
+      <div class="zone-identity">
+        <div>
+          <p class="eyebrow">Current area</p>
+          <h3>${zoneLabels[zone]}</h3>
+        </div>
+        <span class="character-personality">${people.length} residents</span>
+      </div>
+      <div class="zone-banner"></div>
+      <div class="zone-icons">
+        ${people.map((person) => `<div class="zone-people" style="background:${person.color}55;">${person.icon}</div>`).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function renderCharacterList() {
@@ -156,10 +173,19 @@ function renderCharacterList() {
   });
 }
 
+function renderStatBar(label, value) {
+  return `
+    <div class="bar">
+      <div class="bar-label"><span>${label}</span><span>${value}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${value}%"></div></div>
+    </div>
+  `;
+}
+
 function renderSelectedCharacter() {
   const character = getSelectedCharacter();
   if (!character) {
-    elements.selectedCharacterPanel.innerHTML = '<p class="eyebrow">Selected resident</p><h2>No residents yet</h2>';
+    elements.selectedCharacterPanel.innerHTML = '<p class="eyebrow">Selected resident</p><h2>No residents</h2>';
     return;
   }
 
@@ -210,18 +236,29 @@ function renderSelectedCharacter() {
   });
 }
 
-function renderStatBar(label, value) {
-  return `
-    <div class="bar">
-      <div class="bar-label"><span>${label}</span><span>${value}%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${value}%"></div></div>
-    </div>
-  `;
-}
+function createCharacter(name, personality, hobby, color) {
+  const newCharacter = {
+    id: Number(uid().replace(/\D/g, '').slice(0, 8)) || Date.now(),
+    name,
+    personality,
+    hobby,
+    color,
+    mood: 74,
+    hunger: 70,
+    energy: 72,
+    happiness: 78,
+    social: 72,
+    health: 80,
+    age: 18,
+    relationship: 0,
+    favoriteFood: ['fruit bowl', 'ramen', 'tea cake', 'berry shake'][randomInt(0, 3)],
+    icon: ['🙂', '😊', '😄', '😎', '😁'][randomInt(0, 4)]
+  };
 
-function updateHud() {
-  elements.dayCounter.textContent = String(state.day);
-  elements.moneyCounter.textContent = `$${state.money}`;
+  state.characters.push(newCharacter);
+  state.selectedId = newCharacter.id;
+  addLog(`${newCharacter.name} moved into Sunset Bay.`);
+  saveState();
 }
 
 function applyAction(action) {
@@ -242,21 +279,21 @@ function applyAction(action) {
       addLog(`${character.name} had a fun ${character.hobby} session.`);
       break;
     case 'rest':
-      character.energy = clamp(character.energy + 20);
+      character.energy = clamp(character.energy + 18);
       character.mood = clamp(character.mood + 10);
-      addLog(`${character.name} took a nap and feels refreshed.`);
+      addLog(`${character.name} took a break and feels refreshed.`);
       break;
     case 'talk':
       character.social = clamp(character.social + 18);
-      character.relationship = clamp(character.relationship + 1, 0, 100);
+      character.relationship = clamp(character.relationship + 1);
       character.happiness = clamp(character.happiness + 10);
-      addLog(`${character.name} caught up with friends.`);
+      addLog(`${character.name} caught up with everyone in town.`);
       break;
     case 'celebrate':
       character.happiness = clamp(character.happiness + 20);
-      character.mood = clamp(character.mood + 18);
-      state.money += 20;
-      addLog(`${character.name} had a celebration and everyone cheered!`);
+      character.mood = clamp(character.mood + 16);
+      state.money += 25;
+      addLog(`${character.name} threw a small celebration party.`);
       break;
     case 'mini':
       openMiniGame();
@@ -278,7 +315,7 @@ function openMiniGame() {
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
       const choice = Number(button.dataset.choice);
-      const character = getSelectedCharacter();
+      const char = getSelectedCharacter();
       const rewards = {
         1: { mood: 14, social: 10, happiness: 12 },
         2: { mood: 12, happiness: 16 },
@@ -287,10 +324,10 @@ function openMiniGame() {
 
       const result = rewards[choice] || rewards[1];
       Object.entries(result).forEach(([key, value]) => {
-        character[key] = clamp((character[key] || 0) + value);
+        char[key] = clamp((char[key] || 0) + value);
       });
-
-      addLog(`${character.name} loved that plan and felt genuinely cared for.`);
+      char.mood = clamp(Math.round((char.happiness + char.social + char.health) / 3));
+      addLog(`${char.name} loved that plan and felt really cared for.`);
       saveState();
       render();
       overlay.remove();
@@ -306,7 +343,7 @@ function advanceDay() {
 
   state.characters.forEach((character) => {
     character.hunger = clamp(character.hunger - randomInt(4, 10));
-    character.energy = clamp(character.energy - randomInt(3, 9));
+    character.energy = clamp(character.energy - randomInt(3, 8));
     character.social = clamp(character.social - randomInt(2, 7));
     character.health = clamp(character.health - randomInt(2, 7));
     character.happiness = clamp(character.happiness - randomInt(1, 8));
@@ -320,14 +357,15 @@ function advanceDay() {
     }
   });
 
-  addLog(`Day ${state.day} starts with a fresh town rhythm.`);
+  addLog(`Day ${state.day} begins in Sunset Bay.`);
   saveState();
   render();
 }
 
 function resetTown() {
-  const confirmed = window.confirm('Reset all residents and progress?');
+  const confirmed = window.confirm('Reset all town progress?');
   if (!confirmed) return;
+
   localStorage.removeItem(STORAGE_KEY);
   Object.assign(state, structuredClone(defaultState));
   render();
@@ -349,7 +387,13 @@ function handleFormSubmit(event) {
   render();
 }
 
+function updateHud() {
+  elements.dayCounter.textContent = String(state.day);
+  elements.moneyCounter.textContent = `$${state.money}`;
+}
+
 function render() {
+  renderZone();
   renderCharacterList();
   renderSelectedCharacter();
   updateHud();
@@ -359,9 +403,17 @@ document.querySelector('#characterForm').addEventListener('submit', handleFormSu
 document.querySelector('#nextDayBtn').addEventListener('click', advanceDay);
 document.querySelector('#saveBtn').addEventListener('click', () => {
   saveState();
-  addLog('Game saved successfully.');
+  addLog('The game was saved.');
   render();
 });
 document.querySelector('#resetBtn').addEventListener('click', resetTown);
+
+document.querySelectorAll('.map-tab').forEach((button) => {
+  button.addEventListener('click', () => {
+    state.zone = button.dataset.zone;
+    document.querySelectorAll('.map-tab').forEach((tab) => tab.classList.toggle('active', tab === button));
+    render();
+  });
+});
 
 render();
